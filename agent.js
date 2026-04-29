@@ -58,12 +58,14 @@ function hasCollectedPreferences(history) {
 function parseRestaurants(text) {
   const restaurants = [];
   const lines = text.split("\n");
+  console.log("PARSING LINES:", lines);
   lines.forEach((line) => {
     const match =
       line.match(/^\d+\.\s+\*?\*?([^*\n]+)\*?\*?/) ||
       line.match(/^#{1,6}\s+(?:\d+\.\s+)?\*?\*?([^*\n]+)\*?\*?/);
     if (match) {
       const name = match[1].trim();
+      console.log("MATCH FOUND:", name);
       if (!name.endsWith("?") && name.length > 3) {
         restaurants.push({
           name: name,
