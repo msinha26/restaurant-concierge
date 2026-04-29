@@ -48,9 +48,10 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
 }
 
 function hasCollectedPreferences(history) {
-  const budgetKeywords = /budget|price|rupees|₹|under|below/i;
-  const deliveryKeywords = /minutes|hour|soon|time|delivery|fast|quick/i;
-  const text = history.map((m) => m.content).join(" ");
+  const budgetKeywords = /budget|price|rupees|₹|under|below|700|500|300|1000|k|rs/i;
+  const deliveryKeywords = /minutes|hour|soon|time|delivery|fast|quick|min|mins|30|45|hr|asap|flexible/i;
+  const recentMessages = history.slice(-6);
+  const text = recentMessages.map((m) => m.content).join(" ");
   return budgetKeywords.test(text) && deliveryKeywords.test(text);
 }
 
