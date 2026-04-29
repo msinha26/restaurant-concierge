@@ -67,9 +67,10 @@ function parseRestaurants(text) {
       const name = match[1].trim();
       console.log("MATCH FOUND:", name);
       if (!name.endsWith("?") && name.length > 3) {
+        const cleanName = (name.split(/[-⭐]/)[0].replace(/[^\w\s]/g, "").trim()) || "biryani";
         restaurants.push({
           name: name,
-          swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(name)}`,
+          swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(cleanName)}`,
         });
       }
     }
