@@ -59,7 +59,9 @@ function parseRestaurants(text) {
   const restaurants = [];
   const lines = text.split("\n");
   lines.forEach((line) => {
-    const match = line.match(/^\d+\.\s+\*?\*?([^*\n]+)\*?\*?/);
+    const match =
+      line.match(/^\d+\.\s+\*?\*?([^*\n]+)\*?\*?/) ||
+      line.match(/^#{1,6}\s+(?:\d+\.\s+)?\*?\*?([^*\n]+)\*?\*?/);
     if (match) {
       const name = match[1].trim();
       if (!name.endsWith("?") && name.length > 3) {
