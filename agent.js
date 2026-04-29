@@ -15,19 +15,13 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "anthropic-beta": "interleaved-thinking-2025-05-14",
     },
     body: JSON.stringify({
       model: CONFIG.MODEL,
       max_tokens: CONFIG.MAX_TOKENS,
       temperature: CONFIG.TEMPERATURE,
       system: CONFIG.SYSTEM_PROMPT,
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-        },
-      ],
+      tools: [{ type: "web_search_20250305", name: "web_search" }],
       messages: messages,
     }),
   });
@@ -39,7 +33,6 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
 
   const data = await response.json();
 
-  // Extract text response from content blocks
   const textBlocks = data.content.filter((block) => block.type === "text");
   const fullText = textBlocks.map((block) => block.text).join("\n");
 
@@ -55,8 +48,8 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
 }
 
 function hasCollectedPreferences(history) {
-  const budgetKeywords = /budget|price|rupees|₹/i;
-  const deliveryKeywords = /minutes|hour|soon|time|delivery/i;
+  const budgetKeywords = /budget|price|rupees|₹|under|below/i;
+  const deliveryKeywords = /minutes|hour|soon|time|delivery|fast|quick/i;
   const text = history.map((m) => m.content).join(" ");
   return budgetKeywords.test(text) && deliveryKeywords.test(text);
 }
@@ -64,18 +57,17 @@ function hasCollectedPreferences(history) {
 function parseRestaurants(text) {
   const restaurants = [];
   const lines = text.split("\n");
-
   lines.forEach((line) => {
-    // Look for numbered restaurant entries like "1. Restaurant Name"
     const match = line.match(/^\d+\.\s+\*?\*?([^*\n]+)\*?\*?/);
     if (match) {
       const name = match[1].trim();
-      restaurants.push({
-        name: name,
-        swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(name)}`,
-      });
+      if (!name.endsWith("?") && name.length > 3) {
+        restaurants.push({
+          name: name,
+          swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(name)}`,
+        });
+      }
     }
   });
-
   return restaurants;
 }
