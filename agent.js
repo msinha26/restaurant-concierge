@@ -43,14 +43,22 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
   const textBlocks = data.content.filter((block) => block.type === "text");
   const fullText = textBlocks.map((block) => block.text).join("\n");
 
-  // Parse restaurant recommendations from the response
-  const restaurants = parseRestaurants(fullText);
+  const restaurants = hasCollectedPreferences(conversationHistory)
+    ? parseRestaurants(fullText)
+    : [];
 
   return {
     message: fullText,
     restaurants: restaurants,
     rawContent: data.content,
   };
+}
+
+function hasCollectedPreferences(history) {
+  const budgetKeywords = /budget|price|rupees|₹/i;
+  const deliveryKeywords = /minutes|hour|soon|time|delivery/i;
+  const text = history.map((m) => m.content).join(" ");
+  return budgetKeywords.test(text) && deliveryKeywords.test(text);
 }
 
 function parseRestaurants(text) {
