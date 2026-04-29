@@ -377,7 +377,7 @@
     function renderCards(restaurants) {
       if (!restaurants.length) return '';
       return `<div class="restaurant-cards">${restaurants.map(r => `
-        <a class="card" href="${r.swiggyUrl}" target="_blank">
+        <a class="card" href="${r.mapsUrl}" target="_blank">
           <span class="card-name">${r.name}</span>
           <span class="card-arrow">→</span>
         </a>`).join('')}

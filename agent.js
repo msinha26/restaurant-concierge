@@ -68,12 +68,9 @@ function parseRestaurants(text, userLocation) {
       console.log("MATCH FOUND:", name);
       if (!name.endsWith("?") && name.length > 3) {
         const cleanName = (name.split(/[-⭐]/)[0].replace(/[^\w\s]/g, "").trim()) || "biryani";
-        const locationParams = userLocation
-          ? `&lat=${userLocation.lat}&lng=${userLocation.lng}`
-          : "";
         restaurants.push({
           name: name,
-          swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(cleanName)}${locationParams}`,
+          mapsUrl: `https://www.google.com/maps/search/${encodeURIComponent(cleanName + ' Bangalore')}`,
         });
       }
     }
