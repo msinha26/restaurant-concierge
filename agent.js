@@ -11,12 +11,10 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
     },
   ];
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const response = await fetch("https://restaurant-concierge.meha-a-sinha.workers.dev", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
       "anthropic-beta": "interleaved-thinking-2025-05-14",
     },
     body: JSON.stringify({
