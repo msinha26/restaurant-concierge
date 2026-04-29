@@ -37,7 +37,7 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
   const fullText = textBlocks.map((block) => block.text).join("\n");
 
   const restaurants = hasCollectedPreferences(conversationHistory)
-    ? parseRestaurants(fullText)
+    ? parseRestaurants(fullText, userLocation)
     : [];
 
   return {
@@ -55,7 +55,7 @@ function hasCollectedPreferences(history) {
   return budgetKeywords.test(text) && deliveryKeywords.test(text);
 }
 
-function parseRestaurants(text) {
+function parseRestaurants(text, userLocation) {
   const restaurants = [];
   const lines = text.split("\n");
   console.log("PARSING LINES:", lines);
@@ -68,9 +68,12 @@ function parseRestaurants(text) {
       console.log("MATCH FOUND:", name);
       if (!name.endsWith("?") && name.length > 3) {
         const cleanName = (name.split(/[-⭐]/)[0].replace(/[^\w\s]/g, "").trim()) || "biryani";
+        const locationParams = userLocation
+          ? `&lat=${userLocation.lat}&lng=${userLocation.lng}`
+          : "";
         restaurants.push({
           name: name,
-          swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(cleanName)}`,
+          swiggyUrl: `https://www.swiggy.com/search?query=${encodeURIComponent(cleanName)}${locationParams}`,
         });
       }
     }
