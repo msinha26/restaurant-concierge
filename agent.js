@@ -32,6 +32,11 @@ async function runAgent(userMessage, userLocation, conversationHistory, apiKey) 
   }
 
   const data = await response.json();
+  console.log("RAW RESPONSE:", JSON.stringify(data));
+
+  if (!data.content || !Array.isArray(data.content)) {
+    throw new Error(data.error?.message || data.message || "Unexpected response from server");
+  }
 
   const textBlocks = data.content.filter((block) => block.type === "text");
   const fullText = textBlocks.map((block) => block.text).join("\n");
